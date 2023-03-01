@@ -8,9 +8,23 @@ price_tick method and would be able to execute orders via an ExecutionClient ins
 The **trading_framework** module is provided and cannot be modified.
 It has some limitations and flaws, feel free to point them out as you implement your solution.
 
+### Limitations
+    * No partial order fill support
+    * No support for special types (fill or kill, time limit, etc)
+    * No way to check against user balance, pattern day trade, etc
+
 ## Tests
 Provide tests to prove that your code is working. This is especially important since no working implementation of
 the trading framework is provided.
+
+### User Stories
+* As a user, I want to create orders, so that the agent is aware of what orders to execute
+* As a user, I want to specify the order parameters, so the agent can execute them conditionally
+    * Parameters:
+        * Order flag (Buy, Sell)
+        * Product ID
+        * Amount to Buy or Sell
+        * Limit at which to buy or sell
 
 ## Guidance
 ### In the **limit.limit_order_agent** module only:
