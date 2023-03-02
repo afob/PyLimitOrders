@@ -1,0 +1,7 @@
+
+*.pyc
+.idea/vcs.xml
+.idea/PyLimitOrders.iml
+.idea/modules.xml
+.idea/misc.xml
+.idea/inspectionProfiles/profiles_settings.xml
