@@ -22,6 +22,6 @@ the trading framework is provided.
      * a product id
      * an amount to buy/sell
      * the limit at which to buy or sell  
-   * executes any held orders when the market price is at or better than the limit 
-
+   * executes any held orders when the market price is at or better than the limit
+     (you can set aside or comment out the changes made for part 1)
 

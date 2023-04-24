@@ -1,4 +1,3 @@
-from abc import abstractmethod
 from typing import Protocol
 
 
@@ -8,7 +7,6 @@ class ExecutionException(Exception):
 
 class ExecutionClient(Protocol):
 
-    @abstractmethod
     def buy(self, product_id: str, amount: int):
         """
         Execute a buy order, throws ExecutionException on failure
@@ -16,9 +14,8 @@ class ExecutionClient(Protocol):
         :param amount: the amount to buy
         :return: None
         """
-        raise NotImplementedError
+        ...
 
-    @abstractmethod
     def sell(self, product_id: str, amount: int):
         """
         Execute a sell order, throws ExecutionException on failure
@@ -26,4 +23,4 @@ class ExecutionClient(Protocol):
         :param amount: the amount to sell
         :return: None
         """
-        raise NotImplementedError
+        ...
