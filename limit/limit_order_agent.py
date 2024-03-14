@@ -25,10 +25,11 @@ class LimitOrderAgent(PriceListener):
         :return: returns none
         """
         #if product_id == 'IBM' and float(price) <= float(100):
-        #    self.run_orders(product_id, price)
+        #    self.execution_client.buy(product_id, 100)
         self.run_orders(product_id, price)
 
     def add_order(self, operation:bool, product_id: str, amount: int, limit: float):
+        print("adding order")
         order = {
             'limit': limit,
             'amount': amount,
@@ -36,14 +37,13 @@ class LimitOrderAgent(PriceListener):
         }
 
         if product_id in self.orders.keys():
-            self.execution_client.buy(product_id, 100)
+            self.orders[product_id].append(order)
         else:
             self.orders[product_id] = [order]
 
 
     def run_orders(self, product_id: str, price: float):
         operation_completed = None
-
         if product_id in self.orders.keys():
             for order in self.orders[product_id]:
                 if order['operation'] == BUY and float(price) <= float(order['limit']):
@@ -60,11 +60,11 @@ class LimitOrderAgent(PriceListener):
                     print('Executed Client to {} {} units of {} at price {}' \
                          .format(operation_completed, str(order['amount']), product_id, str(price)))
 
-                    self.orders[product_id].remove(order)
+                    self.orders[product_id].remove(order.copy())
                     if product_id in self.completed_orders.keys():
-                        self.completed_orders[product_id].append(order)
+                        self.completed_orders[product_id].append(order.copy())
                     else:
-                        self.completed_orders[product_id] = [order]
+                        self.completed_orders[product_id] = [order.copy()]
         else:
             print('No orders to run for {}'.format(product_id))
 
