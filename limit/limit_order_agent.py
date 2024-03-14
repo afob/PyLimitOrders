@@ -43,9 +43,10 @@ class LimitOrderAgent(PriceListener):
 
 
     def run_orders(self, product_id: str, price: float):
-        operation_completed = None
+
         if product_id in self.orders.keys():
             for order in self.orders[product_id]:
+                operation_completed = None
                 if order['operation'] == BUY and float(price) <= float(order['limit']):
                     self.execution_client.buy(product_id, order['amount'])
                     operation_completed = 'buy'
@@ -65,6 +66,7 @@ class LimitOrderAgent(PriceListener):
                         self.completed_orders[product_id].append(order.copy())
                     else:
                         self.completed_orders[product_id] = [order.copy()]
+
         else:
             print('No orders to run for {}'.format(product_id))
 
