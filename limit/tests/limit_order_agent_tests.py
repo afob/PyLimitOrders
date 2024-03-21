@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import MagicMock
 import path
 import sys
+from flag import FLAG
  
 # directory reach
 directory = path.Path(__file__).abspath()
@@ -13,11 +14,18 @@ from limit.order import Order
 
 ## test for on_price_tick() function
 class OrderTest(unittest.TestCase):
+    def test_place_order_buy(self):
+        thing = ExecutionClient()
+        thing.buy = MagicMock(return_value=None)
+        self.assertTrue(Order.place_order('IBM', 100.0, 1000, FLAG.BUY))
 
-    class LimitOrderAgentTest(unittest.TestCase):
-        def test_place_order(self):
-            thing = ExecutionClient()
-            thing.buy = MagicMock(return_value=None)
-            self.assertTrue(Order.place_order('IBM', 100.0, 1000, 'buy'))
+    def test_place_order_buy_1(self):
+        thing = ExecutionClient()
+        thing.buy = MagicMock(return_value=None)
+        self.assertFalse(Order.place_order('IBM', 100.0, 0, FLAG.BUY))
 
+    def test_place_order_sell(self):
+        thing = ExecutionClient()
+        thing.buy = MagicMock(return_value=None)
+        self.assertTrue(Order.place_order('IBM', 150.0, 100, FLAG.SELL))
 
