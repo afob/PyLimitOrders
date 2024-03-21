@@ -16,7 +16,7 @@ class LimitOrderAgentTest(unittest.TestCase):
         self.assertTrue( testValue_buy, message)
 
 
-    def test_add_order_buy(self):
+    def test_add_order_sell(self):
         limobject = LimitOrderAgent(ExecutionClientSample())
         testValue_sell = limobject.add_order('S', 'prod_2', 15 , 10)
         message = "output value is not true."
