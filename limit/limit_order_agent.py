@@ -30,7 +30,7 @@ class LimitOrderAgent(PriceListener):
             self.execution_client.buy(Product_id ,1000)
          return True   
             
-    def add_order(self, flag : str, Product_id: str, amount :int, limit : float):
+    def add_order(self, flag : str, Product_id: str, amount :int, limit : int):
         # based on the flag buy or sell , use of limit parameter is not understood hence not used 
         if(flag == 'B'):
             self.execution_client.buy(Product_id ,amount)
