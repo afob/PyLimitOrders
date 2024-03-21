@@ -1,5 +1,6 @@
 from trading_framework.execution_client import ExecutionClient
 from trading_framework.price_listener import PriceListener
+from flag import FLAG
 
 
 class LimitOrderAgent(PriceListener):
@@ -11,6 +12,17 @@ class LimitOrderAgent(PriceListener):
         """
         super().__init__()
 
-    def on_price_tick(self, product_id: str, price: float):
+    def on_price_tick(self, product_id: str):
         # see PriceListener protocol and readme file
-        pass
+        return PriceListener.on_price_tick(product_id)
+
+    def add_order(self, flag : FLAG, product_id: str, price_limit: float, amount: float):
+        if flag == 'Flag.BUY':
+            price = LimitOrderAgent.on_price_tick(product_id)
+            if price <= price_limit:
+                ExecutionClient.buy(product_id, amount)
+        if flag == 'Flag.SELL':
+            price = LimitOrderAgent.on_price_tick(product_id)
+            if price >= price_limit:
+                ExecutionClient.sell(product_id, amount)        
+
