@@ -2,6 +2,9 @@ from trading_framework.execution_client import ExecutionClient
 from trading_framework.price_listener import PriceListener
 
 
+
+
+
 class LimitOrderAgent(PriceListener):
 
     def __init__(self, execution_client: ExecutionClient) -> None:
@@ -13,4 +16,7 @@ class LimitOrderAgent(PriceListener):
 
     def on_price_tick(self, product_id: str, price: float):
         # see PriceListener protocol and readme file
-        pass
+        if(price < 100):
+            self.execution_client.buy(Product_id ,1000)
+            
+        return True
