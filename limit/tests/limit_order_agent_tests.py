@@ -5,13 +5,13 @@ class LimitOrderAgentTest(unittest.TestCase):
 
     def test_price_tick(self):
         limobject = LimitOrderAgent(ExecutionClientSample())
-        testValue = limobject.on_price_tick('prod_1', 90)
+        testValue = limobject.on_price_tick('IBM', 90)
         message = "output value is not true."
         self.assertTrue( testValue, message)
 
     def test_add_order_buy(self):
         limobject = LimitOrderAgent(ExecutionClientSample())
-        testValue_buy = limobject.add_order('B', 'prod_2', 50 , 10)
+        testValue_buy = limobject.add_order('B', 'prod_1', 50 , 10)
         message = "output value is not true."
         self.assertTrue( testValue_buy, message)
 
@@ -23,4 +23,5 @@ class LimitOrderAgentTest(unittest.TestCase):
         self.assertTrue( testValue_sell, message)
 
 
-
+if __name__ == "__main__":
+    unittest.main()
