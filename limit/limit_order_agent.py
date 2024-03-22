@@ -17,7 +17,6 @@ class LimitOrderAgent(PriceListener):
 
     def __init__(self, execution_client: ExecutionClient) -> None:
         """
-
         :param execution_client: can be used to buy or sell - see ExecutionClient protocol definition
         """
         super().__init__()
@@ -28,6 +27,7 @@ class LimitOrderAgent(PriceListener):
         # see PriceListener protocol and readme file
         # buy Product 1000 share if price is below 100
         #Part 1
+        
         if(price < 100 and product_id == 'IBM'):
             self.execution_client.buy(Product_id , 1000)
             return True   
@@ -46,9 +46,11 @@ class LimitOrderAgent(PriceListener):
                 self.added_orders.remove(order_data)
                 
         return True
-                
+
+    
     def add_order(self, flag : str, Product_id: str, amount :int, limit : int):
         # based on the flag buy or sell added orders
+        
         if(flag == 'B' or flag == 'S'):
             self.added_orders.append({'flag' : flag , 'Product_id'=Product_id , 'amount'=amount , 'limit' = limit})            
             return True
