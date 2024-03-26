@@ -23,7 +23,7 @@ class LimitOrderAgent(PriceListener):
         # based on the flag buy or sell added orders
         
         if(flag == 'B' or flag == 'S'):
-            self.added_orders.append({'flag' : flag , 'Product_id'=Product_id , 'amount'=amount , 'limit' = limit})            
+            self.added_orders.append({'flag' : flag , 'Product_id':Product_id , 'amount':amount , 'limit' : limit})            
             return True
         
     def execute_added_orders(self):
