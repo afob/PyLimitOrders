@@ -9,10 +9,9 @@ class TestLimitOrderAgent(unittest.TestCase):
 
     def test_add_order(self):
         self.assertEqual(len(self.agent.held_orders), 0)
-        self.agent.add_order('IBM', 10, 100, 'BUY')
+        self.agent.add_order('IBM', 1000, 99, 'BUY')
         self.assertEqual(len(self.agent.held_orders), 1)
     def test_execute_held_orders_buy(self):
-        # {'product_id': product_id, 'amount': amount, 'limit': limit, 'action': action}
         self.agent.add_order('IBM', 1000, 99, 'BUY')
         self.agent.on_price_tick = MagicMock(return_value=('IBM', 99))
         self.agent.execute_held_orders()
