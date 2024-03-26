@@ -16,15 +16,13 @@ class LimitOrderAgent(PriceListener):
         # see PriceListener protocol and readme file
         return PriceListener.on_price_tick(product_id)
 
-    def add_order(self, flag : FLAG, product_ids: list, price_limit: float, amount: float):
+    def add_order(self, flag : FLAG, product_id: str, price_limit: float, amount: float):
         if flag == 'Flag.BUY':
-            for product_id in product_ids:
-                price = LimitOrderAgent.on_price_tick(product_id)
-                if price <= price_limit:
-                    ExecutionClient.buy(product_id, amount)
+            price = LimitOrderAgent.on_price_tick(product_id)
+            if price <= price_limit:
+                ExecutionClient.buy(product_id, amount)
         if flag == 'Flag.SELL':
-            for product_id in range(len(product_ids)):
-                price = LimitOrderAgent.on_price_tick(product_id)
-                if price >= price_limit:
-                    ExecutionClient.sell(product_id, amount)        
+            price = LimitOrderAgent.on_price_tick(product_id)
+            if price >= price_limit:
+                ExecutionClient.sell(product_id, amount)        
 
