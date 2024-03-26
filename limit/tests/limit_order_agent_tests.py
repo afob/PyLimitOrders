@@ -12,17 +12,17 @@ class TestLimitOrderAgent(unittest.TestCase):
         self.agent.add_order('IBM', 10, 100, 'BUY')
         self.assertEqual(len(self.agent.held_orders), 1)
     def test_execute_held_orders_buy(self):
-        self.agent.add_order('IBM', 10, 100, 'BUY')
+        # {'product_id': product_id, 'amount': amount, 'limit': limit, 'action': action}
+        self.agent.add_order('IBM', 1000, 99, 'BUY')
         self.agent.on_price_tick = MagicMock(return_value=('IBM', 99))
         self.agent.execute_held_orders()
-        self.execution_client.buy.assert_called_once_with('IBM', 10)
+        self.execution_client.buy.assert_called_once_with('IBM', 1000)
 
     def test_execute_held_orders_sell(self):
-        self.agent.add_order('IBM', 10, 100, 'SELL')
+        self.agent.add_order('IBM', 1000, 101, 'SELL')
         self.agent.on_price_tick = MagicMock(return_value=('IBM', 101))
         self.agent.execute_held_orders()
-        self.execution_client.sell.assert_called_once_with('IBM', 10)
-
+        self.execution_client.sell.assert_called_once_with('IBM', 1000)
 
 
 if __name__ == '__main__':
