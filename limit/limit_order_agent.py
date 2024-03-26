@@ -11,12 +11,13 @@ class LimitOrderAgent(PriceListener):
         super().__init__()
         self.execution_client = execution_client
         self.added_orders = []
-        
+
+
+    
     def on_price_tick(self, product_id: str, price: float):
         # see PriceListener protocol and readme file
-        # buy Product 1000 share if price is below 100
+        
         return product_id , price
-
     
     def add_order(self, flag : str, Product_id: str, amount :int, limit : int):
         # based on the flag buy or sell added orders
@@ -36,7 +37,6 @@ class LimitOrderAgent(PriceListener):
                 
                 elif(order_data['flag'] == 'S' and order_data['product_id']== product_id and order_data['limit'] <= price):
                     self.execution_client.sell(Product_id , order_data['amount'])                
-                    self.added_orders.remove(order_data)
-                
+                    self.added_orders.remove(order_data)                
         return True
 
