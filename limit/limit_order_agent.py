@@ -1,5 +1,6 @@
-from trading_framework.execution_client import ExecutionClient
+from trading_framework.execution_client import ExecutionClient, ExecutionException
 from trading_framework.price_listener import PriceListener
+import random
 
 
 class LimitOrderAgent(PriceListener):
@@ -15,10 +16,9 @@ class LimitOrderAgent(PriceListener):
 
     def on_price_tick(self, product_id: str, price: float):
         # see PriceListener protocol and readme file
-        # Implement LimitOrderAgent such that it buys 1000 shares of IBM when the price drops below $100
-        # if product_id == 'IBM' and float(price) < float(100):
-        #     self.execution_client.buy(product_id, 1000)
-        return self.execute_order(product_id, price)
+        print(price-2,price+2)
+        return random.randint(price-2,price+2)
+        # return self.execute_order(product_id, price)
 
     def add_order(self, flag: str, product_id: str, amount: int, limit: int):
         """
@@ -29,9 +29,17 @@ class LimitOrderAgent(PriceListener):
         :param limit: the limit at which to buy or sell
         Author: Priyanka Nesargi
         """
-        self.orders.append({'flag': flag, 'product_id': product_id, 'amount': amount, 'limit': limit})
-        print(self.orders, "order added successfully")
-        return True
+        try:
+            if flag in ['buy', 'sell']:
+                self.orders.append({'flag': flag, 'product_id': product_id, 'amount': amount, 'limit': limit})
+                print(self.orders, "order added successfully")
+                return True
+            else:
+                print({'flag': flag, 'product_id': product_id, 'amount': amount, 'limit': limit}, "Order not added because of Invalid Flag")
+                return True
+        except Exception as e:
+            print(str(e))
+            raise ExecutionException
 
     def execute_order(self, product_id: str, price: float):
         """
@@ -40,26 +48,33 @@ class LimitOrderAgent(PriceListener):
         :param price: the current market price of the product
         Author: Priyanka Nesargi
         """
-        # orders consists only orders which of requested product id reducing looping 
-        orders = list(filter(lambda x: x.get('product_id', '')==product_id, self.orders))
-        success = False
-        print(orders)
-        for order in orders:
-            if order['flag'] == 'buy' and float(price) <= float(order['limit']):
-                self.execution_client.buy(self,order['product_id'], order['amount'])
-                self.orders.remove(order)
-                success = True
-                print(self.orders, "clearing")
-                print("{0} amount of {1} bought successfully at {2} price".format(order['amount'], order['product_id'], price))
-            elif order['flag'] == 'sell' and float(price) >= float(order['limit']):
-                self.execution_client.sell(self,order['product_id'], order['amount'])
-                # self.orders.pop(self.orders.index(order))
-                self.orders.remove(order)
-                success = True
-                print("{0} amount of {1} sold successfully at {2} price".format(order['amount'], order['product_id'], price))
-            else:
-                success = False
-        return success
+        try:
+            # Implement LimitOrderAgent such that it buys 1000 shares of IBM when the price drops below $100
+            # if product_id == 'IBM' and float(price) < float(100):
+            #     self.execution_client.buy(product_id, 1000)
+            
+            price = self.on_price_tick(product_id, price)
+            # orders consists only orders which are of requested product id reducing looping and checking if the proudct id matches with requested product id so to reduce loop i have used filter 
+            orders = list(filter(lambda x: x.get('product_id', '')==product_id, self.orders))
+            print(orders)
+            for order in orders:
+                print(order)
+                if order['flag'] == 'buy' and float(price) <= float(order['limit']):
+                    self.execution_client.buy(self,order['product_id'], order['amount'])
+                    self.orders.remove(order)
+                    print(self.orders, "clearing")
+                    print("{0} amount of {1} bought successfully at {2} price".format(order['amount'], order['product_id'], price))
+                elif order['flag'] == 'sell' and float(price) >= float(order['limit']):
+                    self.execution_client.sell(self,order['product_id'], order['amount'])
+                    # self.orders.pop(self.orders.index(order))
+                    self.orders.remove(order)
+                    print("{0} amount of {1} sold successfully at {2} price".format(order['amount'], order['product_id'], price))
+                else:
+                    print("{0} amount of {1} does not satisfy {2} price which was placed at limit {3}".format(order['amount'], order['product_id'], price, order['limit']))
+            return True
+        except Exception as e:
+            print(str(e))
+            raise ExecutionException
 
 
 
