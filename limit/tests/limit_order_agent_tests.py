@@ -1,6 +1,7 @@
 import unittest
 from limit.limit_order_agent import LimitOrderAgent
 from trading_framework.execution_client import ExecutionClient
+import random
 
 
 class LimitOrderAgentTest(unittest.TestCase):
@@ -21,8 +22,10 @@ class LimitOrderAgentTest(unittest.TestCase):
         self.limit_order_agent.add_order('buy', 'ADA', 1000, 65)
         self.limit_order_agent.add_order('buy', 'TATA', 1000, 50)
         self.limit_order_agent.add_order('buy', 'TATA', 1000, 85)
-        # res = self.limit_order_agent.on_price_tick('IBM', 99.0)
-        res = self.limit_order_agent.execute_order('IBM', 99.0)
+        price = 99
+        price = random.randint(price-2,price+2)
+        current_price = self.limit_order_agent.on_price_tick('IBM', price)
+        res = self.limit_order_agent.execute_order('IBM', current_price)
         if res is True:
             print("test_execute_buy_ibm_order Passed Successfully")
         else:
@@ -35,8 +38,10 @@ class LimitOrderAgentTest(unittest.TestCase):
         self.limit_order_agent.add_order('buy', 'ADA', 1000, 65)
         self.limit_order_agent.add_order('buy', 'TATA', 1000, 50)
         self.limit_order_agent.add_order('buy', 'TATA', 1000, 85)
-        # res = self.limit_order_agent.on_price_tick('IBM', 99.0)
-        res = self.limit_order_agent.execute_order('TATA', 80.0)
+        price = 80
+        price = random.randint(price-2,price+2)
+        current_price = self.limit_order_agent.on_price_tick('TATA', price)
+        res = self.limit_order_agent.execute_order('TATA', current_price)
         if res is True:
             print("test_execute_buy_tata_order Passed Successfully")
         else:
@@ -51,8 +56,10 @@ class LimitOrderAgentTest(unittest.TestCase):
         self.limit_order_agent.add_order('sell', 'TATA', 1000, 200.0)
         self.limit_order_agent.add_order('sell', 'IBM', 1000, 65.0)
         self.limit_order_agent.add_order('sell', 'ADA', 1000, 300.0)
-
-        res = self.limit_order_agent.execute_order('IBM', 130.0)
+        price = 130
+        price = random.randint(price-2,price+2)
+        current_price = self.limit_order_agent.on_price_tick('IBM', price)
+        res = self.limit_order_agent.execute_order('IBM', current_price)
         # self.assertTrue(res)
         if res is True:
             print("test_execute_sell_ibm_order Passed Successfully")
@@ -69,7 +76,10 @@ class LimitOrderAgentTest(unittest.TestCase):
         self.limit_order_agent.add_order('sell', 'IBM', 1000, 65.0)
         self.limit_order_agent.add_order('sell', 'ADA', 1000, 300.0)
 
-        res = self.limit_order_agent.execute_order('IBM', 20.0)
+        price = 20
+        price = random.randint(price-2,price+2)
+        current_price = self.limit_order_agent.on_price_tick('IBM', price)
+        res = self.limit_order_agent.execute_order('IBM', current_price)
         # self.assertTrue(res)
         if res is True:
             print("test_execute_sell_ibm_does_not_satisfy_order Passed Successfully")
@@ -79,8 +89,10 @@ class LimitOrderAgentTest(unittest.TestCase):
     def test_execute_invalid_flag_ibm_order(self):
         self.limit_order_agent.add_order('sell', 'IBM', 1000, 125.0)
         self.limit_order_agent.add_order('sold', 'TATA', 1000, 150.0)
-
-        res = self.limit_order_agent.execute_order('IBM', 20.0)
+        price = 20
+        price = random.randint(price-2,price+2)
+        current_price = self.limit_order_agent.on_price_tick('IBM', price)
+        res = self.limit_order_agent.execute_order('IBM', current_price)
         # self.assertTrue(res)
         if res is True:
             print("test_execute_invalid_flag_ibm_order Passed Successfully")

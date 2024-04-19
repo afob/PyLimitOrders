@@ -16,8 +16,7 @@ class LimitOrderAgent(PriceListener):
 
     def on_price_tick(self, product_id: str, price: float):
         # see PriceListener protocol and readme file
-        print(price-2,price+2)
-        return random.randint(price-2,price+2)
+        return price
         # return self.execute_order(product_id, price)
 
     def add_order(self, flag: str, product_id: str, amount: int, limit: int):
