@@ -3,14 +3,26 @@ from trading_framework.price_listener import PriceListener
 
 
 class LimitOrderAgent(PriceListener):
+    def __init__(self, execution_client: ExecutionClient):
+        self.execution_client = execution_client
+        self.orders = []
 
-    def __init__(self, execution_client: ExecutionClient) -> None:
-        """
+    def add_order(self, buy, product_id, amount, limit):
+        # Store order with details
+        self.orders.append({
+            'buy': buy,
+            'product_id': product_id,
+            'amount': amount,
+            'limit': limit
+        })
 
-        :param execution_client: can be used to buy or sell - see ExecutionClient protocol definition
-        """
-        super().__init__()
-
-    def on_price_tick(self, product_id: str, price: float):
-        # see PriceListener protocol and readme file
-        pass
+    def price_tick(self, product_id, price):
+        # Check each order to see if it should be executed
+        for order in list(self.orders):
+            if order['product_id'] == product_id:
+                if (order['buy'] and price <= order['limit']) or (not order['buy'] and price >= order['limit']):
+                    if order['buy']:
+                        self.execution_client.execute_buy(order['product_id'], order['amount'])
+                    else:
+                        self.execution_client.execute_sell(order['product_id'], order['amount'])
+                    self.orders.remove(order) 
