@@ -26,7 +26,7 @@ class LimitOrderAgent(PriceListener):
                         order['order_completed'] = True
                     else:
                         print("Order already place")
-                elif self.market_price >= order.amount and order.flag=="SELL":
+                elif price >= order['limit'] and order['flag']=="SELL":
                     if order['order_completed'] != True:
                         self.execution_client.sell(product_id , order['amount']) 
                         order['order_completed'] = True
