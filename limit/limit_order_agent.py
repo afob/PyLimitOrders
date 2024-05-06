@@ -11,24 +11,37 @@ class LimitOrderAgent(PriceListener):
         """
         self.execution_client = execution_client
         self.orders = []  
-        self.market_price=100      
         super().__init__()
 
     def add_order(self, order_type: str, product_id: str, price: float, limit: int):
         if order_type == "BUY" or order_type == "SELL":
-            self.orders.append({'flag' : order_type , 'Product_id':product_id , 'amount':price , 'limit' : limit})
+            self.orders.append({'flag' : order_type , 'Product_id':product_id , 'amount':price , 'limit' : limit, 'order_completed': False})
 
-    def execute_order(self):
+    def execute_order(self, product_id: str, price: float):
         for order in self.orders:
-            if self.market_price < order.amount and order.flag=="BUY":
-                self.execution_client.buy(order.Product_id , order.amount) 
-                self.on_price_tick(order.Product_id , order.amount)
-            elif self.market_price >= order.amount and order.flag=="SELL":
-                self.execution_client.sell(order.Product_id , order.amount)    
-                self.on_price_tick(order.Product_id , order.amount)
+            if product_id == order['Product_id']:
+                if price < order['limit'] and order['flag']=="BUY":
+                    if order['order_completed'] != True:
+                        self.execution_client.buy(product_id , order['amount']) 
+                        order['order_completed'] = True
+                    else:
+                        print("Order already place")
+                elif self.market_price >= order.amount and order.flag=="SELL":
+                    if order['order_completed'] != True:
+                        self.execution_client.sell(product_id , order['amount']) 
+                        order['order_completed'] = True
+                    else:
+                        print("Order already place")
+                else:
+                    print("Can't place order")
+            else:
+                print("Product Id does not exist")
+        # reomve completed orders from add orders list
+        self.orders = list(filter(lambda o: o['order_completed'] != True, self.orders))
 
     def on_price_tick(self, product_id: str, price: float):
         # see PriceListener protocol and readme file
-        pass
+        #pass
+        self.execute_order(product_id, price)
 
 
