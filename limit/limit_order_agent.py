@@ -1,4 +1,4 @@
-from trading_framework.execution_client import ExecutionClient
+from trading_framework.execution_client import ExecutionClient,ExecutionException
 from trading_framework.price_listener import PriceListener
 
 
@@ -32,8 +32,6 @@ class LimitOrderAgent(PriceListener):
 if __name__ == "__main__":
 
     try:
-
-        # execution_client = MockExecutionClient()
         agent = LimitOrderAgent(PriceListener)
 
         # Add buy order for 1000 shares of IBM at $100 limit
@@ -44,10 +42,10 @@ if __name__ == "__main__":
         agent.on_price_tick('IBM', 101)  # Order should be executed
 
         # Add sell order for 1000 shares of IBM at $150 limit
-        agent.add_order(False, 'IBM', 1000, 150)
+        agent.add_order(False, 'IBM', 1000, 120)
 
         # Simulate price ticks
-        agent.on_price_tick('IBM', 160)  # Order should be executed
+        agent.on_price_tick('IBM', 130)  # Order should be executed
 
     except ExecutionException as e:
         print("An error occurred:", e)
