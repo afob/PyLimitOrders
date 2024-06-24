@@ -10,4 +10,4 @@ class PriceListener(Protocol):
         :param price: the current market price of hte product
         :return: None
         """
-        ...
+        print(f"Received price tick for product {product_id}: ${price}")
