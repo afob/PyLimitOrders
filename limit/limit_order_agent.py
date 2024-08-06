@@ -32,6 +32,7 @@ class LimitOrderAgent(PriceListener):
                         orders_to_remove.append(order)
                 except ExecutionException:
                     print(f"Failed to execute {side} order for {product_id} due to execution error.")
+                    # Handle execution failure
 
         # Remove executed orders after processing
         for order in orders_to_remove:
