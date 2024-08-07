@@ -17,6 +17,7 @@ class LimitOrderAgent(PriceListener):
         
         self.orders.append((side, product_id, amount, limit_price))
 
+
     def on_price_tick(self, product_id: str, price: float):
         """Process the incoming market data and execute orders if conditions are met."""
         orders_to_remove = []
