@@ -1,6 +1,7 @@
 from typing import Protocol
 
 
+
 class ExecutionException(Exception):
     pass
 
@@ -14,6 +15,7 @@ class ExecutionClient(Protocol):
         :param amount: the amount to buy
         :return: None
         """
+        print("Order: {} is bought for amount: {}".format(product_id, amount))
         ...
 
     def sell(self, product_id: str, amount: int):
@@ -23,4 +25,6 @@ class ExecutionClient(Protocol):
         :param amount: the amount to sell
         :return: None
         """
+        print("Order: {} is sold for amount: {}".format(product_id, amount))
         ...
+                
