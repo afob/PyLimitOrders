@@ -14,7 +14,6 @@ class Test(unittest.TestCase):
     client = MockExecutionClient()
     def test_buy(self):
         #adding order
-        print(1)
         agent = LimitOrderAgent(self.client)
         agent.add_order('buy', 'IBM', 1000, 100)
         agent.on_price_tick('IBM', 99)
@@ -22,7 +21,6 @@ class Test(unittest.TestCase):
         self.assertEqual(len(agent.orders), 0)
     
     def test_sell(self):
-        print(2)
         agent = LimitOrderAgent(self.client)
         agent.add_order('sell', 'IBM', 500, 150)
         agent.on_price_tick('IBM', 151)
@@ -46,4 +44,3 @@ class Test(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-    
