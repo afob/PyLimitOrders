@@ -1,52 +1,39 @@
-import unittest
-from limit.limit_order_agent import LimitOrderAgent
+from trading_framework.execution_client import ExecutionClient, ExecutionException
+from trading_framework.price_listener import PriceListener
 
-class MockExecutionClient:
-    def __init__(self):
-        self.orders_executed = []
 
-    def buy(self, product_id, amount):
-        self.orders_executed.append(('buy', product_id, amount))
+class LimitOrderAgent(PriceListener):
 
-    def sell(self, product_id, amount):
-        self.orders_executed.append(('sell', product_id, amount))
+    def __init__(self, execution_client: ExecutionClient) -> None:
+        """
 
-class LimitOrderAgentTest(unittest.TestCase):
+        :param execution_client: can be used to buy or sell - see ExecutionClient protocol definition
+        """
+        super().__init__()
+        self.execution_client = execution_client
+        self.orders = []
+    
+    def add_order(self, is_buy, product_id, amount, limit):
+        order = {
+            'is_buy': is_buy,
+            'product_id': product_id,
+            'amount': amount,
+            'limit': limit
+        }
+        self.orders.append(order)
 
-    def test_buy_order_execution(self):
-        client = MockExecutionClient()
-        agent = LimitOrderAgent(client)
-        agent.add_order(is_buy=True, product_id="IBM", amount=1000, limit=100)
+    def on_price_tick(self, product_id: str, price: float):
+        # see PriceListener protocol and readme file
+        executed_orders = []
+        for order in self.orders:
+            if order['product_id'] == product_id:
+                if (order['is_buy'] and price <= order['limit']) or (not order['is_buy'] and price >= order['limit']):
+                    if order['is_buy']:
+                        self.execution_client.buy(order['product_id'], order['amount'])
+                    else:
+                        self.execution_client.sell(order['product_id'], order['amount'])
+                    executed_orders.append(order)
 
-        # Simulate a price tick
-        agent.price_tick("IBM", 99)
-
-        # Check that the buy order was executed
-        self.assertEqual(len(client.orders_executed), 1)
-        self.assertEqual(client.orders_executed[0], ('buy', "IBM", 1000))
-
-    def test_sell_order_execution(self):
-        client = MockExecutionClient()
-        agent = LimitOrderAgent(client)
-        agent.add_order(is_buy=False, product_id="AAPL", amount=500, limit=150)
-
-        # Simulate a price tick
-        agent.price_tick("AAPL", 151)
-
-        # Check that the sell order was executed
-        self.assertEqual(len(client.orders_executed), 1)
-        self.assertEqual(client.orders_executed[0], ('sell', "AAPL", 500))
-
-    def test_no_execution_when_price_does_not_meet_limit(self):
-        client = MockExecutionClient()
-        agent = LimitOrderAgent(client)
-        agent.add_order(is_buy=True, product_id="GOOG", amount=200, limit=2500)
-
-        # Simulate a price tick
-        agent.price_tick("GOOG", 2501)
-
-        # Check that no order was executed
-        self.assertEqual(len(client.orders_executed), 0)
-
-if __name__ == '__main__':
-    unittest.main()
+        # Remove executed orders from the list
+        for order in executed_orders:
+            self.orders.remove(order)
