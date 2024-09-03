@@ -1,13 +1,12 @@
-from typing import Protocol
+from abc import ABC, abstractmethod
 
+class PriceListener(ABC):
 
-class PriceListener(Protocol):
-
+    @abstractmethod
     def on_price_tick(self, product_id: str, price: float):
         """
-        invoked on market data change
-        :param product_id: id of the product that has a price change
-        :param price: the current market price of hte product
-        :return: None
+        :param product_id: The product for which the price update is received.
+        :param price: The current price of the product.
         """
-        ...
+        pass
+
