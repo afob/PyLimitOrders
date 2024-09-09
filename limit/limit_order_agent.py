@@ -56,8 +56,8 @@ class LimitOrderAgent(PriceListener):
                         self.execution_client.sell(product_id,order["amount"])
                         self.orders.remove(order)
                         return True
-                    else:
-                        return False
+                        
+            return False
                 # else:
                 #     raise ExecutionException
                     
