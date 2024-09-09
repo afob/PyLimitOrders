@@ -10,7 +10,7 @@ class LimitOrderAgentTest(unittest.TestCase):
         LOAgent = LimitOrderAgent(exec_client)
 
         # Buy order for IBM
-        LOAgent.add_order(buy=True,product_id="IBM",
+        LOAgent.add_order(is_buy=True,product_id="IBM",
         amount=1000,price_limit=100)
 
         #Price is above the limit, order should not execute
@@ -27,7 +27,7 @@ class LimitOrderAgentTest(unittest.TestCase):
         LOAgent = LimitOrderAgent(exec_client)
 
         # Add a sell order for NVIDIA
-        LOAgent.add_order(buy=False,product_id="NVIDIA",
+        LOAgent.add_order(is_buy=False,product_id="NVIDIA",
         amount=500,price_limit=150)
 
         #Price is below the limit,order should not execute
