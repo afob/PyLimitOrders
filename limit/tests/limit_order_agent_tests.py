@@ -27,7 +27,7 @@ class LimitOrderAgentTest(unittest.TestCase):
         LOAgent = LimitOrderAgent(exec_client)
 
         # Add a sell order for NVIDIA
-        LOAgent.add_order(is_buy=False,product_id="NVIDIA",
+        LOAgent.add_orders(is_buy=False,product_id="NVIDIA",
         amount=500,price_limit=150)
 
         #Price is below the limit,order should not execute
