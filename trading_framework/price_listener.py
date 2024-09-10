@@ -1,8 +1,10 @@
+from abc import abstractmethod
 from typing import Protocol
 
 
 class PriceListener(Protocol):
 
+    @abstractmethod
     def on_price_tick(self, product_id: str, price: float):
         """
         invoked on market data change
@@ -10,4 +12,4 @@ class PriceListener(Protocol):
         :param price: the current market price of hte product
         :return: None
         """
-        ...
+        raise NotImplementedError
